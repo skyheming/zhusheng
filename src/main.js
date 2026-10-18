@@ -8,7 +8,7 @@ import { createRouter } from './ui/router.js';
 import { toast } from './ui/components/toast.js';
 import { createNav } from './ui/components/nav.js';
 import { createFooter } from './ui/components/footer.js';
-import { setRenderer } from './ui/components/bracelet-stage.js';
+
 import * as homeView from './ui/views/home.js';
 import * as designView from './ui/views/design.js';
 import * as editorView from './ui/views/editor.js';
@@ -149,21 +149,9 @@ function setupSkipLink() {
   });
 }
 
-async function loadRenderer() {
-  try {
-    const mod = await import('./render/bracelet.js');
-    setRenderer(mod);
-    console.info('[main] bracelet renderer ready');
-  } catch (err) {
-    // 渲染器尚未交付时使用 CSS 珠子占位，不阻塞首屏
-    console.info('[main] bracelet renderer not ready — using CSS placeholder.');
-  }
-}
-
 async function boot() {
   applyDocumentLang();
   setupSkipLink();
-  await loadRenderer();
 
   router = createRouter({
     onRoute,

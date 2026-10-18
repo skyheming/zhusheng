@@ -3,7 +3,6 @@
 
 import { t, getLang, pick, UI_GENDERS, UI_WISHES, UI_ELEMENTS } from '../i18n.js';
 import { generateDesign, encodeDesign } from '../../core/index.js';
-import { createBraceletStage } from '../components/bracelet-stage.js';
 
 const MIN_DATE = '1900-01-01';
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -98,7 +97,6 @@ export function render(ctx) {
   const root = h('div', 'view view--home');
   const cleanups = [];
   const timers = [];
-  let stage = null;
 
   root.appendChild(buildHero());
   root.appendChild(buildGenerator());
@@ -175,15 +173,17 @@ export function render(ctx) {
     // 视觉
     const visual = h('div', 'hero__visual');
     const ring = h('div', 'hero__ring');
-    const stageHost = h('div', 'hero__stage');
     const sample = sampleDesign();
-    stage = createBraceletStage({
-      design: sample,
-      view: 'circle',
-      interactive: false,
-      animate: true,
-    });
-    stageHost.appendChild(stage.el);
+    const stageHost = h('div', 'hero__stage');
+    const poster = h('img', 'hero__poster');
+    poster.src = './assets/img/hero-webgl.png';
+    poster.alt = getLang() === 'en'
+      ? 'Sample 3D bracelet: silver obsidian, garnet and morganite'
+      : '示例 3D 手串：银曜石、石榴石与摩根石';
+    poster.width = 640;
+    poster.height = 640;
+    poster.decoding = 'async';
+    stageHost.appendChild(poster);
     const halo = h('span', 'hero__halo');
     halo.setAttribute('aria-hidden', 'true');
     add(ring, halo, stageHost);
@@ -197,7 +197,14 @@ export function render(ctx) {
     add(card, cardTop, cardId, cardMeta);
 
     const caption = h('p', 'hero__caption', heroCaption(sample));
-    add(visual, ring, card, caption);
+    const captionNote = h(
+      'p',
+      'hero__caption-note',
+      getLang() === 'en'
+        ? `Sample birth ${SAMPLE_INPUT.date} ${SAMPLE_INPUT.time} — not your input`
+        : `示例生辰 ${SAMPLE_INPUT.date} ${SAMPLE_INPUT.time} · 不是你的输入`,
+    );
+    add(visual, ring, card, caption, captionNote);
 
     add(grid, rail, copy, visual);
     hero.appendChild(grid);
@@ -689,7 +696,6 @@ export function render(ctx) {
   function destroy() {
     timers.forEach((id) => window.clearTimeout(id));
     cleanups.forEach((fn) => fn?.());
-    stage?.destroy();
     root.remove();
   }
 

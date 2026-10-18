@@ -6,17 +6,9 @@
 
 import { getLang, elementLabel, ELEMENT_NAMES, ELEMENT_HEX } from '../i18n.js';
 
-let rendererModule = null;
+// 预览只保留 WebGL 3D。SVG 渲染器（src/render/bracelet.js）仅用于离线渲染测试，
+// 不再在本组件中加载；无 WebGL 时回退到 CSS 占位珠子。
 
-export function setRenderer(mod) {
-  rendererModule = mod && typeof mod.renderBracelet === 'function' ? mod : null;
-}
-
-export function hasRenderer() {
-  return !!rendererModule;
-}
-
-const VIEW_LIST = ['3d', 'circle', 'flat', 'wrist'];
 
 function isZh() {
   return getLang() !== 'en';
@@ -84,10 +76,9 @@ export function createBraceletStage({
   el.setAttribute('aria-label', stageAriaLabel(design));
 
   let currentDesign = design;
-  let currentView = VIEW_LIST.includes(view) ? view : 'circle';
+  let currentView = '3d';
   let rotation = 0;
   let nodes = [];
-  let real = null;
   let destroyed = false;
   let rafId = 0;
   let baseSize = 520;
@@ -95,6 +86,8 @@ export function createBraceletStage({
   let webgl = null;
   let webglModule = null;
   let webglLoading = false;
+  let webglFailed = false;
+  let real = null;
 
   // ---- 结构 ----
   const canvas = document.createElement('div');
@@ -412,12 +405,8 @@ export function createBraceletStage({
       });
     } catch (err) {
       console.warn('[stage] WebGL preview unavailable', err);
-      if (currentView === '3d') {
-        currentView = 'circle';
-        el.dataset.view = 'circle';
-        onViewFallback?.('circle');
-        render();
-      }
+      webglFailed = true;
+      buildPlaceholder();
     } finally {
       webglLoading = false;
       el.classList.remove('is-webgl-loading');
@@ -427,60 +416,25 @@ export function createBraceletStage({
   function render({ entrance = false } = {}) {
     if (destroyed) return;
     el.setAttribute('aria-label', stageAriaLabel(currentDesign));
-    if (currentView === '3d') {
-      renderWebGL();
+    if (webglFailed) {
+      buildPlaceholder();
       return;
     }
-    destroyWebGL();
-    if (rendererModule) {
-      destroyReal();
-      canvas.replaceChildren();
-      nodes = [];
-      tip.hidden = true;
-      real = rendererModule.renderBracelet({
-        container: canvas,
-        design: currentDesign,
-        view: currentView,
-        interactive,
-        onBeadHover,
-        onBeadClick,
-      });
-      return;
-    }
-    buildPlaceholder();
-    if (entrance) playEntrance();
+    renderWebGL();
   }
 
   function update(nextDesign, options = {}) {
     currentDesign = nextDesign;
     el.setAttribute('aria-label', stageAriaLabel(currentDesign));
-    if (currentView === '3d' && webgl) {
+    if (webgl) {
       webgl.update(nextDesign);
       return;
     }
-    if (real?.update) {
-      real.update(nextDesign);
-      return;
-    }
-    if (currentView !== '3d') buildPlaceholder();
-    if (options.animate) playEntrance();
+    if (webglFailed) buildPlaceholder();
   }
 
-  function setView(next) {
-    if (!VIEW_LIST.includes(next) || next === currentView) return;
-    currentView = next;
-    el.dataset.view = currentView;
-    rotation = 0;
-    if (next === '3d') {
-      renderWebGL();
-      return;
-    }
-    destroyWebGL();
-    if (real?.setView) {
-      real.setView(next);
-      return;
-    }
-    render();
+  function setView() {
+    // 视图已统一为 3D；保留空实现以兼容旧调用。
   }
 
   function destroy() {
@@ -497,15 +451,11 @@ export function createBraceletStage({
   }
 
   observeSize();
-  if (rendererModule || currentView === '3d') {
-    render();
-  } else {
-    buildPlaceholder();
-  }
+  render();
 
   return {
     el,
-    get view() { return currentView; },
+    get view() { return '3d'; },
     update,
     setView,
     rotateTo(deg) {

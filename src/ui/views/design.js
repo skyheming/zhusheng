@@ -129,18 +129,6 @@ export function render(ctx) {
   let wristSelectEl = null;
   let specTable = null;
 
-  function canUseWebGL() {
-    try {
-      const c = document.createElement('canvas');
-      return !!(window.WebGL2RenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
-    } catch {
-      return false;
-    }
-  }
-
-  const hasAccessories = (design.composition.layout || []).some((item) => item.kind === 'spacer' || item.kind === 'charm');
-  const can3d = canUseWebGL() && !hasAccessories;
-  const initialView = can3d && window.matchMedia('(min-width: 1024px)').matches ? '3d' : 'circle';
   let barPrice = null;
 
   const shared = comesFromShare(ctx.route?.query);
@@ -218,48 +206,18 @@ export function render(ctx) {
     const stagePanel = h('div', 'design__stage-panel');
     stage = createBraceletStage({
       design,
-      view: initialView,
+      view: '3d',
       interactive: true,
       onBeadHover: (item) => updateReadout(item),
-      onViewFallback: (next) => {
-        if (!views) return;
-        viewButtons.forEach((b) => b.setAttribute('aria-pressed', b.dataset.view === next ? 'true' : 'false'));
-        hint.textContent = t('design.dragHint');
-      },
     });
 
-    const views = h('div', 'stage-views');
-    views.setAttribute('role', 'group');
-    views.setAttribute('aria-label', t('design.view.label'));
-    const viewDefs = [
-      ...(can3d ? [['3d', 'design.view.threeD']] : []),
-      ['circle', 'design.view.circle'],
-      ['flat', 'design.view.flat'],
-      ['wrist', 'design.view.wrist'],
-    ];
-    const viewButtons = [];
-    for (const [value, key] of viewDefs) {
-      const btn = h('button', 'stage-views__btn', t(key));
-      btn.type = 'button';
-      btn.dataset.view = value;
-      btn.setAttribute('aria-pressed', value === initialView ? 'true' : 'false');
-      btn.addEventListener('click', () => {
-        if (!stage) return;
-        stage.setView(value);
-        viewButtons.forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
-        hint.textContent = value === 'circle' ? t('design.dragHint') : value === '3d' ? t('design.dragHint3d') : '';
-      });
-      viewButtons.push(btn);
-      views.appendChild(btn);
-    }
-
-    const hint = h('p', 'design__drag-hint', initialView === '3d' ? t('design.dragHint3d') : t('design.dragHint'));
+    const hint = h('p', 'design__drag-hint', t('design.dragHint3d'));
     const readout = h('div', 'design__readout');
     readout.setAttribute('aria-live', 'polite');
     statusEl = h('span', 'design__readout-default', defaultReadout());
     readout.appendChild(statusEl);
 
-    add(stagePanel, stage.el, views, hint, readout);
+    add(stagePanel, stage.el, hint, readout);
     const visual = h('div', 'design__visual');
     visual.appendChild(stagePanel);
     const visualCaption = h('p', 'design__visual-caption');
