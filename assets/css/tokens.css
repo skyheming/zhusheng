@@ -1,0 +1,107 @@
+/* ZHUSHENG design tokens — frozen by Lead (see docs/design-tokens.md).
+   UI/renderer must consume these variables; do not edit values here. */
+:root {
+  /* Paper & ink */
+  --paper: #F5F0E6;
+  --paper-soft: #EFE8DA;
+  --paper-deep: #E6DCC9;
+  --paper-warm: #F8F3E9;
+  --ivory: #FCFAF5;
+  --ink: #191611;
+  --ink-soft: #423C33;
+  --ink-muted: #6F6759;
+  --line: #D9CFBE;
+  --line-strong: #BDB09A;
+
+  /* Brand accents */
+  --gold: #A9864B;
+  --gold-soft: #C8AE7C;
+  --gold-text: #8A6430;        /* AA on paper (4.69:1) — 用于金色文字 */
+  --gold-text-on-night: #D8BF8C; /* 暗底金色文字 */
+  --cinnabar: #9B3A2C;
+  --jade: #4E6B5C;
+  --night: #14120E;
+  --night-soft: #221E17;
+  --night-line: #332D23;
+  --text-on-night: #B9AE9C;
+
+  /* Five elements */
+  --el-wood: #5F7D5A;
+  --el-fire: #B14A36;
+  --el-earth: #B08A57;
+  --el-metal: #9AA0A6;
+  --el-water: #3F5B6E;
+
+  /* Semantic */
+  --bg: var(--paper);
+  --surface: var(--ivory);
+  --surface-soft: var(--paper-soft);
+  --text: var(--ink);
+  --text-secondary: var(--ink-soft);
+  --text-muted: var(--ink-muted);
+  --accent: var(--gold);
+  --danger: var(--cinnabar);
+  --focus: #2F5D7C;
+
+  /* Type */
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, "Times New Roman", serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --font-latin: Georgia, "Times New Roman", serif;
+  --font-mono: "SFMono-Regular", Consolas, "Courier New", monospace;
+
+  --fs-hero: clamp(40px, 7.2vw, 104px);
+  --fs-h1: clamp(32px, 4.4vw, 60px);
+  --fs-h2: clamp(24px, 2.8vw, 40px);
+  --fs-h3: 22px;
+  --fs-lead: clamp(17px, 1.5vw, 20px);
+  --fs-body: 16px;
+  --fs-sm: 14px;
+  --fs-xs: 12px;
+  --fs-micro: 11px;
+
+  /* Space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --container: 1328px;
+
+  /* Shape */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 1px 0 rgba(25, 22, 17, .04), 0 12px 40px -24px rgba(25, 22, 17, .25);
+  --shadow-float: 0 18px 60px -28px rgba(25, 22, 17, .45);
+  --shadow-bar: 0 -8px 24px -12px rgba(25, 22, 17, .18);
+
+  /* Motion */
+  --ease-out: cubic-bezier(.22, .68, .18, 1);
+  --ease-in-out: cubic-bezier(.65, .05, .36, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 560ms;
+
+  /* Z-index scale */
+  --z-base: 0;
+  --z-sticky: 20;
+  --z-header: 40;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  --z-toast: 1100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+}

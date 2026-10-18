@@ -1,0 +1,90 @@
+{% comment %}
+  珠生 ZHUSHENG — 定制器主题 Section（接入骨架）
+  用法：放入主题 sections/，在 page.zhusheng.json 模板中引用；或作为 landing page 独立模板。
+  静态站代码由 esbuild 打包为 assets/zhusheng.js，构建后把 index.html 的 #app 挂载点搬到这里。
+{% endcomment %}
+
+{%- liquid
+  assign product = section.settings.product
+  assign variant_map = section.settings.variant_map | default: '{}'
+-%}
+
+<section
+  id="zhusheng-builder"
+  class="zs-builder"
+  data-zhusheng-root
+  data-shop="{{ shop.permanent_domain }}"
+  data-currency="{{ cart.currency.iso_code }}"
+  data-locale="{{ request.locale.iso_code }}"
+>
+  <div id="zs-app" class="zs-app" aria-live="polite">
+    <noscript>
+      <p>请启用 JavaScript 以使用五行手串定制器。</p>
+    </noscript>
+  </div>
+</section>
+
+<script>
+  window.ZHUSHENG_CONFIG = {
+    shop: {{ shop.permanent_domain | json }},
+    currency: {{ cart.currency.iso_code | json }},
+    locale: {{ request.locale.iso_code | json }},
+    productHandle: {{ product.handle | default: '' | json }},
+    variants: {{ variant_map }},
+    routes: {
+      cart: {{ routes.cart_url | json }},
+      cartAdd: '/cart/add.js',
+      cartUpdate: '/cart/update.js'
+    },
+    settings: {
+      shippingThreshold: {{ section.settings.free_shipping_threshold | times: 100 }},
+      shippingFee: {{ section.settings.shipping_fee | times: 100 }},
+      showCompareAt: {{ section.settings.show_compare_at | json }}
+    }
+  };
+</script>
+
+{{ 'zhusheng.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'zhusheng.js' | asset_url }}" defer></script>
+<link rel="preload" href="{{ 'zhusheng.css' | asset_url }}" as="style">
+
+{% schema %}
+{
+  "name": "珠生 · 五行定制器",
+  "tag": "section",
+  "class": "section-zhusheng",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "定制手串母商品"
+    },
+    {
+      "type": "textarea",
+      "id": "variant_map",
+      "label": "变体映射 JSON",
+      "default": "{\"6|silver|standard\":0,\"8|silver|standard\":0,\"10|silver|standard\":0}",
+      "info": "键：珠径|金属|等级；值：Shopify variant id"
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "包邮门槛（元）",
+      "default": 399
+    },
+    {
+      "type": "number",
+      "id": "shipping_fee",
+      "label": "运费（元）",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_at",
+      "label": "展示参考价",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "珠生 · 五行定制器" }]
+}
+{% endschema %}

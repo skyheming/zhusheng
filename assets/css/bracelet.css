@@ -1,0 +1,299 @@
+/* =========================================================================
+ * ZHUSHENG / 珠生 — bracelet renderer styles
+ * Renderer-owned. Only `.bz-` prefixed selectors live in this file.
+ * Colour/type/spacing tokens come from assets/css/tokens.css.
+ * ========================================================================= */
+
+/* ---------- shell ---------- */
+
+.bz-preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+  width: 100%;
+  min-width: 0;
+  color: var(--text, #191611);
+}
+
+.bz-viewport {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.bz-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+}
+
+.bz-preview[data-view="flat"] .bz-svg,
+.bz-preview[data-view="wrist"] .bz-svg,
+.bz-preview--static .bz-svg {
+  cursor: default;
+}
+
+.bz-svg.is-dragging {
+  cursor: grabbing;
+}
+
+/* ---------- bar ---------- */
+
+.bz-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4, 16px);
+  flex-wrap: wrap;
+}
+
+.bz-switch {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--line, #d9cfbe);
+  background: var(--ivory, #fcfaf5);
+}
+
+.bz-tab {
+  appearance: none;
+  border: 0;
+  border-left: 1px solid var(--line, #d9cfbe);
+  background: transparent;
+  color: var(--text-secondary, #423c33);
+  font-family: var(--font-body, sans-serif);
+  font-size: var(--fs-xs, 12px);
+  line-height: 1;
+  letter-spacing: 0.16em;
+  padding: 0 16px;
+  height: 38px;
+  cursor: pointer;
+  transition: background-color var(--dur-fast, 160ms) var(--ease-out, ease),
+    color var(--dur-fast, 160ms) var(--ease-out, ease);
+}
+
+.bz-tab:first-child {
+  border-left: 0;
+}
+
+.bz-tab:hover {
+  background: var(--paper-soft, #efe8da);
+}
+
+.bz-tab.is-active {
+  background: var(--ink, #191611);
+  color: var(--ivory, #fcfaf5);
+}
+
+.bz-tab:focus-visible {
+  outline: 2px solid var(--focus, #2f5d7c);
+  outline-offset: 2px;
+}
+
+.bz-hint {
+  margin: 0;
+  font-family: var(--font-body, sans-serif);
+  font-size: var(--fs-micro, 11px);
+  letter-spacing: 0.08em;
+  color: var(--text-muted, #6f6759);
+}
+
+/* ---------- tooltip ---------- */
+
+.bz-tooltip {
+  position: absolute;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 10px;
+  min-width: 96px;
+  max-width: 240px;
+  background: var(--ivory, #fcfaf5);
+  border: 1px solid var(--line, #d9cfbe);
+  border-radius: var(--radius-sm, 2px);
+  box-shadow: var(--shadow-soft, 0 12px 40px -24px rgba(25, 22, 17, 0.25));
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  transition: opacity var(--dur-fast, 160ms) var(--ease-out, ease);
+}
+
+.bz-tooltip[hidden] {
+  display: none;
+}
+
+.bz-tooltip.is-below {
+  transform: translate(-50%, 0);
+}
+
+.bz-tt-dot {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--line-strong, #bdb09a);
+  box-shadow: inset 0 0 0 1px rgba(25, 22, 17, 0.12);
+}
+
+.bz-tt-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.bz-tt-name {
+  font-family: var(--font-display, serif);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.bz-tt-meta {
+  font-family: var(--font-body, sans-serif);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  color: var(--text-muted, #6f6759);
+  white-space: nowrap;
+}
+
+/* ---------- beads & hits ---------- */
+
+.bz-bead,
+.bz-charm {
+  cursor: pointer;
+  outline: none;
+}
+
+.bz-preview--static .bz-bead,
+.bz-preview--static .bz-charm {
+  cursor: default;
+}
+
+.bz-bead-art,
+.bz-charm-art {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform var(--dur-fast, 160ms) var(--ease-out, cubic-bezier(0.22, 0.68, 0.18, 1)),
+    filter var(--dur-fast, 160ms) var(--ease-out, ease);
+}
+
+.bz-charm-art {
+  transform-origin: 50% 0%;
+}
+
+.bz-bead:hover .bz-bead-art,
+.bz-bead.is-hover .bz-bead-art,
+.bz-charm:hover .bz-charm-art,
+.bz-charm.is-hover .bz-charm-art {
+  transform: scale(1.06);
+}
+
+/* far half of the ring: gentle depth-of-field + aerial haze (v2) */
+.bz-bead--back .bz-bead-art {
+  filter: blur(0.015px) saturate(0.96) brightness(0.99);
+}
+
+/* focus ring — the referenced material artwork gets a cool halo */
+.bz-bead:focus-visible .bz-bead-art {
+  filter: brightness(1.06) drop-shadow(0 0 6px rgba(47, 93, 124, 0.55));
+}
+
+.bz-charm:focus-visible .bz-charm-art {
+  filter: brightness(1.08) drop-shadow(0 0 7px rgba(47, 93, 124, 0.4));
+}
+
+/* subtle hover halo around the whole bead */
+.bz-bead:hover .bz-bead-haze {
+  opacity: 0 !important;
+}
+
+/* ---------- wrist annotation ---------- */
+
+.bz-annot-text {
+  font-family: var(--font-body, sans-serif);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  fill: var(--text-muted, #6f6759);
+}
+
+/* ---------- intro ---------- */
+
+@keyframes bz-bead-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.bz-bead,
+.bz-charm {
+  animation: bz-bead-in 0.42s var(--ease-out, ease) both;
+  animation-delay: calc(var(--bz-i, 0) * 26ms);
+}
+
+.bz-no-anim .bz-bead,
+.bz-no-anim .bz-charm {
+  animation: none;
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .bz-bead,
+  .bz-charm {
+    animation: none !important;
+  }
+
+  .bz-bead-art,
+  .bz-charm-art,
+  .bz-tab,
+  .bz-tooltip {
+    transition: none !important;
+  }
+
+  .bz-bead:hover .bz-bead-art,
+  .bz-bead.is-hover .bz-bead-art,
+  .bz-charm:hover .bz-charm-art,
+  .bz-charm.is-hover .bz-charm-art {
+    transform: none;
+  }
+}
+
+/* ---------- compact ---------- */
+
+.bz-preview.is-compact .bz-bar {
+  gap: var(--space-2, 8px);
+}
+
+.bz-preview.is-compact .bz-tab {
+  padding: 0 12px;
+  height: 36px;
+  letter-spacing: 0.12em;
+}
+
+.bz-preview.is-compact .bz-hint {
+  display: none;
+}
+
+@media (max-width: 479px) {
+  .bz-tab {
+    min-width: 64px;
+    justify-content: center;
+  }
+
+  .bz-hint {
+    display: none;
+  }
+}
