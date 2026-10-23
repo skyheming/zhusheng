@@ -745,8 +745,6 @@ html[data-lang="en"] .hero__title-line--accent { font-size: .92em; padding-left:
   padding-top: 28px;
   border-top: 1px solid var(--line-strong);
 }
-.story:nth-child(2) { margin-top: clamp(0px, 4vw, 56px); }
-.story:nth-child(3) { margin-top: clamp(0px, 2vw, 28px); }
 
 .story__media {
   position: relative;
