@@ -587,7 +587,7 @@ export function render(ctx) {
         img.alt = photo.alt?.[getLang() === 'en' ? 'en' : 'zh'] || '';
         img.width = 900;
         img.height = 1125;
-        img.loading = 'lazy';
+        img.loading = 'eager';
         img.decoding = 'async';
         const tag = h('figcaption', 'story__tag', t('home.stories.photoTag'));
         add(media, img, tag);
