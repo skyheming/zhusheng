@@ -123,6 +123,8 @@ const DICT = {
 
     'home.stories.kicker': 'THEIR WORLDS · 手串故事',
     'home.stories.title': '他们把它戴在腕上。',
+    'home.stories.photoTag': '佩戴示意',
+    'home.stories.photoNote': '图片为佩戴示意图，真实客单照片会陆续替换。',
     'home.stories.1.quote': '我本来只是想买一串好看的。输入生日那天，系统说我火太旺，用月光石。戴上之后确实会安静一点——也可能是心理作用，但我不介意。',
     'home.stories.1.name': '林，29 岁，杭州',
     'home.stories.1.id': '癸水 · 月白',
@@ -473,6 +475,8 @@ const DICT = {
 
     'home.stories.kicker': 'THEIR WORLDS',
     'home.stories.title': 'They wear it on the wrist.',
+    'home.stories.photoTag': 'STYLED',
+    'home.stories.photoNote': 'Images are styled placeholders; real customer photos will replace them.',
     'home.stories.1.quote': 'I only wanted something pretty. It told me my fire was too strong and chose moonstone. I do feel calmer — maybe it is in my head, but I do not mind.',
     'home.stories.1.name': 'Lin, 29, Hangzhou',
     'home.stories.1.id': 'Gui Water · Moon White',

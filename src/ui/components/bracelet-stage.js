@@ -1,8 +1,6 @@
 // src/ui/components/bracelet-stage.js — 手串预览挂载层
-// 真实渲染器（src/render/bracelet.js）就绪前，用纯 CSS/HTML 珠子环占位：
-// 每颗珠子按 design.composition.layout 逐个绘制，颜色/隔珠/挂坠都来自设计数据，
-// 支持 circle / flat / wrist 三视图、拖动旋转、悬停识珠。
-// 渲染器就绪后（main.js 动态 import 成功）自动切换到真实 SVG 渲染。
+// 预览统一使用 WebGL 3D（src/render/webgl-beads.js），不再加载 SVG 渲染器；
+// WebGL 不可用时用纯 CSS 珠子占位，保证页面不空白。
 
 import { getLang, elementLabel, ELEMENT_NAMES, ELEMENT_HEX } from '../i18n.js';
 
@@ -54,7 +52,7 @@ function stageAriaLabel(design) {
  * 创建预览挂载点。
  * @param {Object} options
  * @param {object} options.design
- * @param {'circle'|'flat'|'wrist'} [options.view]
+ * @param {'3d'} [options.view]
  * @param {boolean} [options.interactive]
  * @param {(bead:object|null)=>void} [options.onBeadHover]
  * @param {(bead:object)=>void} [options.onBeadClick]

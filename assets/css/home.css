@@ -748,6 +748,46 @@ html[data-lang="en"] .hero__title-line--accent { font-size: .92em; padding-left:
 .story:nth-child(2) { margin-top: clamp(0px, 4vw, 56px); }
 .story:nth-child(3) { margin-top: clamp(0px, 2vw, 28px); }
 
+.story__media {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+}
+
+.story__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  filter: saturate(.88) contrast(.98);
+  transition: transform .8s cubic-bezier(.22, 1, .36, 1);
+}
+
+.story:hover .story__img { transform: scale(1.025); }
+
+.story__tag {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 5px 8px;
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: rgba(245, 240, 230, .9);
+  border: 1px solid rgba(217, 207, 190, .7);
+  backdrop-filter: blur(3px);
+}
+
+.stories__note {
+  margin-top: 18px;
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-muted);
+}
+
 .story__quote {
   display: flex;
   flex-direction: column;

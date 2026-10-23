@@ -2,6 +2,7 @@
 // 已接入 src/core/index.js（mock.js 保留为离线兜底，不再被视图引用）。
 
 import { t, getLang, pick, UI_GENDERS, UI_WISHES, UI_ELEMENTS } from '../i18n.js';
+import { STORY_PHOTOS } from '../../data/story-photos.js';
 import { generateDesign, encodeDesign } from '../../core/index.js';
 
 const MIN_DATE = '1900-01-01';
@@ -578,6 +579,20 @@ export function render(ctx) {
     [1, 2, 3].forEach((n) => {
       const li = h('li', 'story');
       li.dataset.reveal = 'true';
+      const photo = STORY_PHOTOS[n - 1];
+      if (photo) {
+        const media = h('figure', 'story__media');
+        const img = h('img', 'story__img');
+        img.src = photo.src;
+        img.alt = photo.alt?.[getLang() === 'en' ? 'en' : 'zh'] || '';
+        img.width = 900;
+        img.height = 1125;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        const tag = h('figcaption', 'story__tag', t('home.stories.photoTag'));
+        add(media, img, tag);
+        li.appendChild(media);
+      }
       const quote = h('blockquote', 'story__quote');
       quote.append(h('span', 'story__mark', '“'), h('p', '', t(`home.stories.${n}.quote`)));
       const foot = h('footer', 'story__foot');
@@ -593,7 +608,8 @@ export function render(ctx) {
       add(li, quote, foot);
       list.appendChild(li);
     });
-    wrap.appendChild(list);
+    const note = h('p', 'stories__note', t('home.stories.photoNote'));
+    wrap.append(list, note);
     section.appendChild(wrap);
     return section;
   }
